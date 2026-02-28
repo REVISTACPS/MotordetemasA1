@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liga Bronce</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --bg:#0f172a;
+    --card:#111c34;
+    --accent:#7c3aed;
+    --gold:#d4af37;
+    --text:#e5e7eb;
+    --soft:#94a3b8;
+}
+
+/* Light Mode */
+body.light{
+    --bg:#eef2f7;
+    --card:#ffffff;
+    --text:#1e293b;
+    --soft:#475569;
+}
+
+/* Base */
+body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    transition:0.4s ease;
+}
+
+/* HEADER MÍSTICO */
+.header-container{
+    margin:40px auto;
+    width:92%;
+    max-width:720px;
+    padding:25px 30px;
+    border-radius:18px;
+    background:linear-gradient(145deg,#0b1224,#131f3d);
+    box-shadow:
+        0 0 40px rgba(124,58,237,0.25),
+        0 15px 40px rgba(0,0,0,0.6);
+    display:flex;
+    align-items:center;
+    gap:25px;
+    position:relative;
+    overflow:hidden;
+}
+
+/* Glow */
+.header-container::before{
+    content:"";
+    position:absolute;
+    width:300px;
+    height:300px;
+    background:radial-gradient(circle,rgba(124,58,237,0.35),transparent 70%);
+    top:-120px;
+    left:-120px;
+    z-index:0;
+}
+
+/* Imagen escudo */
+.header-image img{
+    height:140px;
+    width:auto;
+    position:relative;
+    z-index:1;
+}
+
+/* Línea dorada */
+.divider{
+    width:1px;
+    height:90px;
+    background:linear-gradient(to bottom,transparent,var(--gold),transparent);
+    position:relative;
+    z-index:1;
+}
+
+/* Información */
+.header-info{
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    z-index:1;
+}
+
+/* Título */
+/* Brillo solo al pasar el mouse o tocar en móvil */
+.header-info h1 {
+    margin: 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    position: relative;
+    color: #ffd700;
+
+    /* Sin brillo por defecto */
+    text-shadow: none;
+
+    transition: text-shadow 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover en desktop */
+.header-info h1:hover {
+    text-shadow:
+        0 0 5px #ffd700,
+        0 0 10px #ffd700,
+        0 0 20px #ffd700,
+        0 0 30px #ffea70;
+    transform: translateY(-2px);
+}
+
+/* Touch en móviles */
+@media (hover: none) and (pointer: coarse) {
+    .header-info h1:active {
+        text-shadow:
+            0 0 5px #ffd700,
+            0 0 10px #ffd700,
+            0 0 20px #ffd700,
+            0 0 30px #ffea70;
+        transform: translateY(-2px);
+    }
+}
+
+/* Subtítulo */
+.header-info p{
+    margin:6px 0 14px 0;
+    font-size:0.9rem;
+    color:white;
+}
+
+/* Tags */
+.tags-container{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.tag{
+    font-size:0.75rem;
+    padding:6px 14px;
+    border-radius:20px;
+    background:rgba(124,58,237,0.15);
+    border:1px solid rgba(124,58,237,0.5);
+    color:white;
+    backdrop-filter:blur(6px);
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.tag:hover{
+    background:rgba(124,58,237,0.25);
+}
+
+/* Botón modo oscuro dentro */
+.dark-toggle{
+    margin-left:auto;
+    background:linear-gradient(135deg,var(--accent),var(--gold));
+    border:none;
+    padding:6px 12px;
+    border-radius:20px;
+    color:white;
+    cursor:pointer;
+    font-size:0.8rem;
+    transition:0.3s ease;
+    position:relative;
+    z-index:1;
+}
+
+.dark-toggle:hover{
+    transform:scale(1.05);
+}
+
+/* Contenedor de contenido */
+.content-container{
+    width:85%;
+    max-width:650px;
+    margin:20px auto 60px auto;
+    background:var(--card);
+    padding:35px;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    color:#fbbf24;
+    display:none; /* oculto por defecto */
+}
+
+/* Responsive */
+@media(max-width:768px){
+    .header-container{
+        flex-direction:column;
+        text-align:center;
+        gap:15px;
+    }
+
+    .divider{
+        display:none;
+    }
+
+    .header-info{
+        align-items:center;
+    }
+
+    .dark-toggle{
+        margin-left:0;
+    }
+}
+
+
+
+.header-container:hover{
+    box-shadow:
+        0 0 25px rgba(124,58,237,0.6),
+        0 0 60px rgba(124,58,237,0.4),
+        0 0 100px rgba(124,58,237,0.2),
+        0 20px 45px rgba(0,0,0,0.8);
+    transform:translateY(-3px);
+}
+
+
+.fixed-tag{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #7c3aed, #d4af37);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 999;
+}
+
+.fixed-tag:hover{
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+}
+
+
+/* ...todo tu CSS existente... */
+
+/* Cambiar solo el color del título de las 4 habilidades */
+#content-fundamentos h2 {
+    color: #d4af37; /* Amarillo */
+}
+
+#content-pronombres h2 { 
+    color: #3b82f6;      /* azul */
+}
+
+#content-tobe h2 {
+     color: #10b981; }          /* verde */
+
+#content-presente-simple h2 {
+     color: #f43f5e; } /* rojo */
+
+     
+</style>
+
+
+
+</head>
+
+<body>
+
+<div class="header-container" id="header-title">
+
+    <div class="header-image">
+        <img src="https://i.ibb.co/tMqrkKH5/Chat-GPT-Image-27-feb-2026-11-27-22-a-m.png" alt="Escudo">
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="header-info">
+        <h1>Programa de estudio Básico A - Liga Bronce</h1>
+        <p>Disciplina y mentalidad ganadora 🚀</p>
+
+        <div class="tags-container">
+            <div class="tag" id="tag-fundamentos">Las 4 habilidades del inglés</div>
+            <div class="tag" id="tag-pronombres">Pronombres P.</div>
+            <div class="tag" id="tag-tobe">Verb To-Be</div>
+            <div class="tag" id="tag-presente-simple">Presente Simple</div>
+        </div>
+    </div>
+
+    <button class="dark-toggle" onclick="toggleMode()">🌙</button>
+
+</div>
+
+<div class="content-container" id="content-fundamentos">
+   <h2>De cero a héroe del inglés: Listening, Speaking, Reading y Writing 🦸‍♂️📝 (Nivel A1)</h2>
+
+<p>En inglés, para poder comunicarnos bien, necesitamos practicar cuatro habilidades principales: <strong>Listening (Escuchar)</strong>, <strong>Speaking (Hablar)</strong>, <strong>Reading (Leer)</strong> y <strong>Writing (Escribir)</strong>. A continuación, les explico cada una con ejemplos y consejos.</p>
+
+<h3>1. Listening (Escuchar)</h3>
+<p>Escuchar es la habilidad de entender lo que otras personas dicen en inglés. Al principio, es importante:</p>
+<ul>
+    <li>Escuchar palabras y frases básicas, como saludos: "Hello", "Good morning", "How are you?"</li>
+    <li>Escuchar nombres de cosas y objetos cotidianos: "book", "apple", "school".</li>
+    <li>Escuchar instrucciones simples: "Open your book", "Stand up", "Sit down".</li>
+    <li>Escuchar canciones y videos cortos para acostumbrarse a los sonidos del inglés.</li>
+</ul>
+<p>💡 Consejo: Repite en voz baja lo que escuchas para practicar la pronunciación.</p>
+
+<h3>2. Speaking (Hablar)</h3>
+<p>Hablar es usar palabras y frases en inglés para comunicar tus ideas. Puedes empezar con cosas simples:</p>
+<ul>
+    <li>Presentarte: "My name is Dani", "I am 10 years old".</li>
+    <li>Decir tus gustos: "I like pizza", "I like reading books".</li>
+    <li>Hacer preguntas sencillas: "What is your name?", "How are you?"</li>
+    <li>Practicar diálogos cortos con tus compañeros o familia.</li>
+    <li>Usar frases de cortesía: "Please", "Thank you", "Excuse me".</li>
+</ul>
+<p>💡 Consejo: No tengas miedo de equivocarte. Hablar mucho te ayuda a mejorar.</p>
+
+<h3>3. Reading (Leer)</h3>
+<p>Leer es entender palabras, frases y textos en inglés. Para principiantes, se recomienda:</p>
+<ul>
+    <li>Leer palabras y frases simples en libros o carteles: "Welcome", "Exit", "School".</li>
+    <li>Leer menús, instrucciones cortas o etiquetas de productos.</li>
+    <li>Leer cuentos cortos o historias fáciles para niños.</li>
+    <li>Tratar de comprender el significado general aunque no entiendas todas las palabras.</li>
+    <li>Subrayar palabras nuevas y buscarlas en el diccionario.</li>
+</ul>
+<p>💡 Consejo: Lee todos los días al menos 5-10 minutos para acostumbrarte al inglés escrito.</p>
+
+<h3>4. Writing (Escribir)</h3>
+<p>Escribir es expresar tus ideas en inglés usando palabras y frases. Puedes comenzar con ejercicios simples:</p>
+<ul>
+    <li>Escribir tu nombre, edad, nacionalidad y gustos: "My name is Dani. I am 10 years old."</li>
+    <li>Escribir frases cortas sobre tus hobbies: "I like playing football. I like drawing."</li>
+    <li>Escribir preguntas y respuestas sencillas: "What is your favorite color? My favorite color is blue."</li>
+    <li>Hacer pequeños diarios o listas de cosas que haces cada día.</li>
+    <li>Revisar tu ortografía y practicar la escritura a mano para recordar mejor las palabras.</li>
+</ul>
+<p>💡 Consejo: Escribe todos los días un poco. No importa si hay errores, lo importante es practicar.</p>
+
+<h3>Resumen y práctica diaria</h3>
+<p>Para mejorar en inglés, recuerda practicar las cuatro habilidades todos los días:</p>
+<ul>
+    <li><strong>Listening:</strong> Escucha palabras, canciones y frases.</li>
+    <li><strong>Speaking:</strong> Habla sobre ti y responde preguntas simples.</li>
+    <li><strong>Reading:</strong> Lee carteles, historias y frases fáciles.</li>
+    <li><strong>Writing:</strong> Escribe frases cortas y pequeñas historias sobre tu vida.</li>
+</ul>
+<p>💡 Consejo final: Copia estas notas en tu cuaderno, repítelas y practícalas cada día. ¡La práctica constante te ayudará a mejorar rápidamente! 📝✨</p>
+
+<div class="fixed-tag">Arriba</div>
+<div class="fixed-tag" id="btn-arriba">Arriba</div>
+</div>
+
+<div class="content-container" id="content-pronombres">
+     <h2>Verbo To-Be en inglés (Nivel A1)</h2>
+    <p>El verbo <strong>to be</strong> significa <em>ser</em> o <em>estar</em> y es uno de los verbos más importantes del inglés. Se utiliza para describir estados, características, ubicaciones, identidades y situaciones. Aprender a usarlo correctamente es fundamental para formar oraciones básicas.</p>
+
+    <h3>1. Conjugación del verbo To-Be en presente</h3>
+    <p>El verbo <strong>to be</strong> cambia según el pronombre personal:</p>
+    <ul>
+        <li><strong>I am</strong> – Yo soy / Yo estoy</li>
+        <li><strong>You are</strong> – Tú eres / Tú estás</li>
+        <li><strong>He / She / It is</strong> – Él / Ella / Eso es / está</li>
+        <li><strong>We are</strong> – Nosotros / Nosotras somos / estamos</li>
+        <li><strong>You are</strong> – Ustedes son / están</li>
+        <li><strong>They are</strong> – Ellos / Ellas son / están</li>
+    </ul>
+    <p>💡 Consejo: Memoriza estas formas y úsalas en frases diarias para reforzar tu memoria.</p>
+
+    <h3>2. Ejemplos prácticos en afirmativo</h3>
+    <ul>
+        <li>I am happy. – Yo estoy feliz.</li>
+        <li>You are my friend. – Tú eres mi amigo.</li>
+        <li>He is a teacher. – Él es maestro.</li>
+        <li>She is reading a book. – Ella está leyendo un libro.</li>
+        <li>It is raining. – Está lloviendo.</li>
+        <li>We are students. – Nosotros somos estudiantes.</li>
+        <li>They are playing football. – Ellos están jugando fútbol.</li>
+    </ul>
+
+    <h3>3. Forma negativa del verbo To-Be</h3>
+    <p>Para negar usamos <strong>not</strong> después del verbo:</p>
+    <ul>
+        <li>I am not – Yo no soy / Yo no estoy</li>
+        <li>You are not / You aren’t – Tú no eres / Tú no estás</li>
+        <li>He / She / It is not / isn’t – Él / Ella / Eso no es / no está</li>
+        <li>We are not / We aren’t – Nosotros no somos / Nosotros no estamos</li>
+        <li>They are not / They aren’t – Ellos no son / Ellos no están</li>
+    </ul>
+    <p>Ejemplos:</p>
+    <ul>
+        <li>I am not tired. – No estoy cansado.</li>
+        <li>She isn’t at home. – Ella no está en casa.</li>
+        <li>They aren’t happy. – Ellos no están felices.</li>
+    </ul>
+    <p>💡 Consejo: Practica convirtiendo oraciones afirmativas a negativas para interiorizar la regla.</p>
+
+    <h3>4. Forma interrogativa del verbo To-Be</h3>
+    <p>Para hacer preguntas, invertimos el verbo y el sujeto:</p>
+    <ul>
+        <li>Am I …? – ¿Estoy …? / ¿Soy …?</li>
+        <li>Are you …? – ¿Estás …? / ¿Eres …?</li>
+        <li>Is he / she / it …? – ¿Está él / ella / eso …? / ¿Es …?</li>
+        <li>Are we …? – ¿Estamos …? / ¿Somos …?</li>
+        <li>Are they …? – ¿Están ellos …? / ¿Son …?</li>
+    </ul>
+    <p>Ejemplos:</p>
+    <ul>
+        <li>Am I ready? – ¿Estoy listo?</li>
+        <li>Are you hungry? – ¿Tienes hambre?</li>
+        <li>Is he your brother? – ¿Él es tu hermano?</li>
+        <li>Are we on time? – ¿Estamos a tiempo?</li>
+    </ul>
+    <p>💡 Consejo: Practica haciendo preguntas con diferentes pronombres personales en tu día a día.</p>
+
+    <h3>5. Uso del verbo To-Be con adjetivos</h3>
+    <p>El verbo <strong>to be</strong> se combina con adjetivos para describir estados o características:</p>
+    <ul>
+        <li>I am happy. – Yo estoy feliz.</li>
+        <li>He is tall. – Él es alto.</li>
+        <li>They are tired. – Ellos están cansados.</li>
+        <li>We are excited. – Nosotros estamos emocionados.</li>
+    </ul>
+    <p>💡 Consejo: Aprende un conjunto de adjetivos básicos y crea tus propias oraciones.</p>
+
+    <h3>6. Uso del verbo To-Be con sustantivos</h3>
+    <p>También se usa para identificar personas, profesiones, lugares o cosas:</p>
+    <ul>
+        <li>She is a doctor. – Ella es doctora.</li>
+        <li>We are students. – Nosotros somos estudiantes.</li>
+        <li>It is a book. – Es un libro.</li>
+        <li>They are friends. – Ellos son amigos.</li>
+    </ul>
+    <p>💡 Consejo: Practica describiendo a tus amigos, familia o mascotas usando “is” o “are”.</p>
+
+    <h3>7. Uso del verbo To-Be con ubicaciones</h3>
+    <p>El verbo <strong>to be</strong> también indica lugares o ubicaciones:</p>
+    <ul>
+        <li>I am at home. – Estoy en casa.</li>
+        <li>He is in the classroom. – Él está en el aula.</li>
+        <li>We are at school. – Estamos en la escuela.</li>
+        <li>They are in the park. – Ellos están en el parque.</li>
+    </ul>
+    <p>💡 Consejo: Describe dónde estás tú y tus amigos con oraciones completas.</p>
+
+    <h3>8. Errores comunes con el verbo To-Be</h3>
+    <ul>
+        <li>Decir <em>She are</em> en lugar de <em>She is</em>.</li>
+        <li>Olvidar usar “not” en negativas: <em>I am tired → I am not tired</em>.</li>
+        <li>Confundir “is” con “are” según el sujeto.</li>
+    </ul>
+    <p>💡 Consejo: Repasa cada oración y verifica el sujeto antes de conjugar el verbo.</p>
+
+    <h3>9. Ejercicios prácticos</h3>
+    <ul>
+        <li>Escribe 5 oraciones afirmativas usando diferentes pronombres: <em>I am, You are, He is…</em></li>
+        <li>Convierte esas oraciones a negativas.</li>
+        <li>Haz 5 preguntas con los pronombres usando el verbo to-be.</li>
+        <li>Describe lugares y estados usando “am/is/are”.</li>
+    </ul>
+
+    <h3>10. Resumen final</h3>
+    <p>El verbo <strong>to be</strong> es clave para comunicar ideas básicas en inglés. Con práctica diaria podrás:</p>
+    <ul>
+        <li>Conjugarlo correctamente según el pronombre personal.</li>
+        <li>Formar oraciones afirmativas, negativas e interrogativas.</li>
+        <li>Describir personas, cosas, estados y ubicaciones.</li>
+        <li>Evitar errores comunes al usar “is/are/am”.</li>
+    </ul>
+    <p>💡 Consejo final: Crea frases todos los días, habla en voz alta y repite ejercicios. La constancia te ayudará a dominar el verbo To-Be. 📝✨</p>
+    <div class="fixed-tag" id="btn-arriba-pronombres">Arriba</div>
+</div>
+
+
+
+<!-- Contenedor del Verbo To-Be -->
+<div class="content-container" id="content-tobe">
+  <h2>Verbo "To-Be" en inglés (Nivel A1)</h2>
+    <p>El verbo <strong>to be</strong> es uno de los verbos más importantes del inglés, ya que se utiliza para describir estados, identidades, ubicaciones, edades y muchas otras situaciones básicas. Equivale a los verbos <em>ser</em> y <em>estar</em> en español.</p>
+
+    <h3>1. Significado y uso del verbo "to be"</h3>
+    <p>El verbo <strong>to be</strong> se usa principalmente para:</p>
+    <ul>
+        <li>Identificar personas, cosas o ideas. <em>Ejemplo: I am a teacher. – Yo soy maestro.</em></li>
+        <li>Expresar estados o emociones. <em>Ejemplo: She is happy. – Ella está feliz.</em></li>
+        <li>Indicar ubicación. <em>Ejemplo: We are at school. – Nosotros estamos en la escuela.</em></li>
+        <li>Decir la edad de alguien. <em>Ejemplo: He is 10 years old. – Él tiene 10 años.</em></li>
+    </ul>
+    <p>💡 Consejo: El verbo <strong>to be</strong> no necesita otro verbo para funcionar; es un verbo completo por sí mismo.</p>
+
+    <h3>2. Conjugación del verbo "to be" en presente</h3>
+    <p>La conjugación del verbo <strong>to be</strong> en presente cambia según el pronombre:</p>
+    <ul>
+        <li><strong>I am</strong> – Yo soy/estoy</li>
+        <li><strong>You are</strong> – Tú eres/estás / Usted es/está</li>
+        <li><strong>He/She/It is</strong> – Él/Ella/Esto es/está</li>
+        <li><strong>We are</strong> – Nosotros/Nosotras somos/estamos</li>
+        <li><strong>You are</strong> – Ustedes son/están</li>
+        <li><strong>They are</strong> – Ellos/Ellas son/están</li>
+    </ul>
+    <p>Ejemplos prácticos:</p>
+    <ul>
+        <li>I am happy. – Yo estoy feliz.</li>
+        <li>You are my friend. – Tú eres mi amigo.</li>
+        <li>He is tall. – Él es alto.</li>
+        <li>We are students. – Nosotros somos estudiantes.</li>
+        <li>They are teachers. – Ellos son maestros.</li>
+    </ul>
+
+    <h3>3. Conjugación en pasado y futuro</h3>
+    <p>En pasado, <strong>to be</strong> se convierte en <em>was</em> o <em>were</em>:</p>
+    <ul>
+        <li>I / He / She / It <strong>was</strong></li>
+        <li>You / We / They <strong>were</strong></li>
+    </ul>
+    <p>Ejemplos:</p>
+    <ul>
+        <li>I was at home yesterday. – Yo estaba en casa ayer.</li>
+        <li>They were happy last week. – Ellos estaban felices la semana pasada.</li>
+    </ul>
+    <p>En futuro se usa <strong>will be</strong> para todos los pronombres:</p>
+    <ul>
+        <li>I / You / He / She / It / We / They <strong>will be</strong></li>
+    </ul>
+    <p>Ejemplos:</p>
+    <ul>
+        <li>She will be here tomorrow. – Ella estará aquí mañana.</li>
+        <li>We will be ready. – Nosotros estaremos listos.</li>
+    </ul>
+
+    <h3>4. Formas afirmativas, negativas e interrogativas</h3>
+    <p>El verbo <strong>to be</strong> se puede usar de diferentes formas:</p>
+
+    <h4>4.1 Afirmativa</h4>
+    <ul>
+        <li>I am happy. – Yo estoy feliz.</li>
+        <li>You are my friend. – Tú eres mi amigo.</li>
+    </ul>
+
+    <h4>4.2 Negativa</h4>
+    <p>Se agrega <strong>not</strong> después del verbo:</p>
+    <ul>
+        <li>I am not tired. – No estoy cansado.</li>
+        <li>They are not at home. – Ellos no están en casa.</li>
+        <li>He is not ready. – Él no está listo.</li>
+    </ul>
+
+    <h4>4.3 Interrogativa</h4>
+    <p>Se invierte el orden del verbo y el pronombre:</p>
+    <ul>
+        <li>Are you happy? – ¿Estás feliz?</li>
+        <li>Is she your sister? – ¿Es ella tu hermana?</li>
+        <li>Were they at school? – ¿Estaban ellos en la escuela?</li>
+    </ul>
+
+    <h3>5. Uso con adjetivos y sustantivos</h3>
+    <p>El verbo <strong>to be</strong> se combina con adjetivos para describir estados o características, y con sustantivos para identificar personas o cosas.</p>
+    <ul>
+        <li>She is tall. – Ella es alta.</li>
+        <li>It is small. – Es pequeño.</li>
+        <li>We are students. – Nosotros somos estudiantes.</li>
+    </ul>
+    <p>💡 Consejo: Recuerda que <strong>am/is/are</strong> cambia según el pronombre y nunca se usa “be” solo en presente.</p>
+
+    <h3>6. Uso con ubicación, tiempo y edad</h3>
+    <ul>
+        <li>Ubicación: The book is on the table. – El libro está sobre la mesa.</li>
+        <li>Tiempo: It is 10 o’clock. – Son las 10 en punto.</li>
+        <li>Edad: I am 10 years old. – Yo tengo 10 años.</li>
+    </ul>
+    <p>💡 Consejo: Siempre concuerda el pronombre con la forma correcta de <strong>to be</strong>.</p>
+
+    <h3>7. Expresiones comunes con "to be"</h3>
+    <ul>
+        <li>Be careful! – ¡Ten cuidado!</li>
+        <li>It’s OK. – Está bien.</li>
+        <li>Be quiet! – ¡Silencio!</li>
+        <li>How are you? – ¿Cómo estás?</li>
+    </ul>
+
+    <h3>8. Errores frecuentes</h3>
+    <ul>
+        <li>No usar “is” con I / You / We / They. Ejemplo incorrecto: <em>I is happy</em>.</li>
+        <li>No olvidar “not” en negativos: <em>He not is</em> es incorrecto.</li>
+        <li>Confundir pasado y presente: <em>He were here</em> en presente es incorrecto.</li>
+    </ul>
+
+    <h3>9. Ejercicios prácticos</h3>
+    <p>Para dominar el verbo <strong>to be</strong>, haz lo siguiente:</p>
+    <ul>
+        <li>Escribe 5 frases afirmativas usando I / You / He / She / It.</li>
+        <li>Convierte esas frases a negativa usando <strong>not</strong>.</li>
+        <li>Haz 5 preguntas con los mismos pronombres.</li>
+        <li>Identifica y corrige errores en frases como: <em>He are tall</em>, <em>I am not happy</em>.</li>
+        <li>Describe tu día usando “I am … / We are … / They are …”</li>
+    </ul>
+
+    <h3>10. Resumen final</h3>
+    <p>El verbo <strong>to be</strong> es fundamental para hablar inglés correctamente. Con práctica diaria, podrás:</p>
+    <ul>
+        <li>Conjugarlo en presente, pasado y futuro.</li>
+        <li>Formar oraciones afirmativas, negativas e interrogativas.</li>
+        <li>Describir estados, identidades, ubicación, tiempo y edad.</li>
+        <li>Evitar errores comunes y usarlo con confianza.</li>
+    </ul>
+    <p>💡 Consejo final: Practica todos los días escribiendo frases, hablando con amigos o leyendo textos sencillos. ¡La constancia hará que domines el verbo <strong>to be</strong> rápidamente! 📝✨</p>
+    <div class="fixed-tag" id="btn-arriba-tobe">Arriba</div>
+    </div>
+</div>
+
+<div class="content-container" id="content-presente-simple">
+    <h2>Presente Simple en inglés (Nivel A1)</h2>
+    <p>El <strong>Presente Simple</strong> se utiliza para expresar acciones habituales, rutinas, hechos generales y verdades universales. En inglés, podemos formarlo con el <strong>verbo to-be</strong>, <strong>verbos regulares</strong> y <strong>verbos irregulares</strong>.</p>
+
+    <!-- 1. Verbo To-Be -->
+    <h3>1. Verbo "To-Be" en presente simple</h3>
+    <p>El verbo <strong>to-be</strong> se usa para describir estados, identidades, emociones, ubicaciones y características permanentes o temporales.</p>
+    
+    <h4>Estructura gramatical:</h4>
+    <ul>
+        <li>Afirmativa: <strong>Sujeto + am/is/are + complemento</strong>  
+            <p>Ejemplo: <em>I am happy. / She is a student. / We are friends.</em></p>
+        </li>
+        <li>Negativa: <strong>Sujeto + am/is/are + not + complemento</strong>  
+            <p>Ejemplo: <em>I am not tired. / He is not ready. / They are not at home.</em></p>
+        </li>
+        <li>Interrogativa: <strong>Am/Is/Are + sujeto + complemento?</strong>  
+            <p>Ejemplo: <em>Are you ready? / Is she happy? / Are we on time?</em></p>
+        </li>
+    </ul>
+
+    <!-- 2. Verbos Regulares -->
+    <h3>2. Verbos Regulares</h3>
+    <p>Los <strong>verbos regulares</strong> forman el presente simple de manera estándar: en tercera persona singular agregamos <strong>-s</strong> o <strong>-es</strong> al verbo base.</p>
+    
+    <h4>Estructura gramatical:</h4>
+    <ul>
+        <li>Afirmativa: <strong>Sujeto + verbo base (+ s/es) + complemento</strong>  
+            <p>Ejemplo: <em>I work every day. / She plays football.</em></p>
+        </li>
+        <li>Negativa: <strong>Sujeto + do/does + not + verbo base + complemento</strong>  
+            <p>Ejemplo: <em>I do not play chess. / He does not like coffee.</em></p>
+        </li>
+        <li>Interrogativa: <strong>Do/Does + sujeto + verbo base + complemento?</strong>  
+            <p>Ejemplo: <em>Do you study English? / Does she like pizza?</em></p>
+        </li>
+    </ul>
+
+    <!-- 3. Verbos Irregulares -->
+    <h3>3. Verbos Irregulares</h3>
+    <p>Los <strong>verbos irregulares</strong> no siguen las reglas de los verbos regulares, pero en presente simple solo debemos recordar la forma base y aplicar <strong>do/does</strong> para negativos e interrogativos.</p>
+    
+    <h4>Estructura gramatical:</h4>
+    <ul>
+        <li>Afirmativa: <strong>Sujeto + verbo base + complemento</strong>  
+            <p>Ejemplo: <em>I go to school. / He has a car.</em></p>
+        </li>
+        <li>Negativa: <strong>Sujeto + do/does + not + verbo base + complemento</strong>  
+            <p>Ejemplo: <em>I do not go to school. / She does not have a pen.</em></p>
+        </li>
+        <li>Interrogativa: <strong>Do/Does + sujeto + verbo base + complemento?</strong>  
+            <p>Ejemplo: <em>Do you go to school? / Does he have a bike?</em></p>
+        </li>
+    </ul>
+
+    <!-- Tabla de ejercicios -->
+    <h3>4. Tabla de ejercicios en Presente Simple</h3>
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Oración</th>
+                <th>Afirmativa</th>
+                <th>Negativa</th>
+                <th>Interrogativa</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Yo / ser / estudiante</td>
+                <td>I am a student.</td>
+                <td>I am not a student.</td>
+                <td>Am I a student?</td>
+            </tr>
+            <tr>
+                <td>Ella / jugar / fútbol</td>
+                <td>She plays football.</td>
+                <td>She does not play football.</td>
+                <td>Does she play football?</td>
+            </tr>
+            <tr>
+                <td>Nosotros / ir / escuela</td>
+                <td>We go to school.</td>
+                <td>We do not go to school.</td>
+                <td>Do we go to school?</td>
+            </tr>
+            <tr>
+                <td>Ellos / tener / coche</td>
+                <td>They have a car.</td>
+                <td>They do not have a car.</td>
+                <td>Do they have a car?</td>
+            </tr>
+            <tr>
+                <td>Tú / estar / feliz</td>
+                <td>You are happy.</td>
+                <td>You are not happy.</td>
+                <td>Are you happy?</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h3>Tabla de verbos regulares e irregulares (Presente Simple)</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Verbo / Sujeto</th>
+            <th>Afirmativa</th>
+            <th>Negativa</th>
+            <th>Interrogativa</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Verbos regulares -->
+        <tr>
+            <td>I / work</td>
+            <td>I work every day.</td>
+            <td>I do not work on Sundays.</td>
+            <td>Do I work every day?</td>
+        </tr>
+        <tr>
+            <td>She / play</td>
+            <td>She plays football.</td>
+            <td>She does not play tennis.</td>
+            <td>Does she play football?</td>
+        </tr>
+        <tr>
+            <td>We / study</td>
+            <td>We study English.</td>
+            <td>We do not study French.</td>
+            <td>Do we study English?</td>
+        </tr>
+
+        <!-- Verbos irregulares -->
+        <tr>
+            <td>I / go</td>
+            <td>I go to school.</td>
+            <td>I do not go to school on holidays.</td>
+            <td>Do I go to school?</td>
+        </tr>
+        <tr>
+            <td>He / have</td>
+            <td>He has a car.</td>
+            <td>He does not have a bike.</td>
+            <td>Does he have a car?</td>
+        </tr>
+        <tr>
+            <td>They / eat</td>
+            <td>They eat breakfast at 7 a.m.</td>
+            <td>They do not eat lunch at 10 a.m.</td>
+            <td>Do they eat breakfast at 7 a.m.?</td>
+        </tr>
+    </tbody>
+</table>
+
+    <p>💡 Consejo: Practica cada oración en voz alta, cambia los sujetos y verbos para crear nuevas frases y refuerza tu aprendizaje.</p>
+
+    <div class="fixed-tag" id="btn-arriba-presente-simple">Arriba</div>
+</div>
+
+<script>
+/* ================== Modo claro/oscuro ================== */
+function toggleMode() {
+    document.body.classList.toggle("light");
+    const btn = document.querySelector(".dark-toggle");
+    btn.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
+}
+
+/* ================== Referencias ================== */
+const headerTitle = document.getElementById("header-title");
+
+// Tags
+const tagFund = document.getElementById("tag-fundamentos");
+const tagPronombres = document.getElementById("tag-pronombres");
+const tagToBe = document.getElementById("tag-tobe");
+const tagPresenteSimple = document.getElementById("tag-presente-simple");
+
+// Contenedores
+const contentFund = document.getElementById("content-fundamentos");
+const contentPronombres = document.getElementById("content-pronombres");
+const contentToBe = document.getElementById("content-tobe");
+const contentPresenteSimple = document.getElementById("content-presente-simple");
+
+// Botones "Arriba"
+const btnArriba = document.getElementById("btn-arriba");
+const btnArribaPronombres = document.getElementById("btn-arriba-pronombres");
+const btnArribaToBe = document.getElementById("btn-arriba-tobe");
+const btnArribaPresente = document.getElementById("btn-arriba-presente-simple");
+
+/* ================== Función universal ================== */
+function showContent(showEl) {
+    const allContents = [contentFund, contentPronombres, contentToBe, contentPresenteSimple];
+    allContents.forEach(el => el.style.display = (el === showEl ? "block" : "none"));
+    showEl.scrollIntoView({ behavior: "smooth" });
+}
+
+/* ================== Eventos click en Tags ================== */
+tagFund.addEventListener("click", () => showContent(contentFund));
+tagPronombres.addEventListener("click", () => showContent(contentPronombres));
+tagToBe.addEventListener("click", () => showContent(contentToBe));
+tagPresenteSimple.addEventListener("click", () => showContent(contentPresenteSimple));
+
+/* ================== Eventos click en "Arriba" ================== */
+[btnArriba, btnArribaPronombres, btnArribaToBe, btnArribaPresente].forEach(btn => {
+    btn.addEventListener("click", () => {
+        headerTitle.scrollIntoView({ behavior: "smooth" });
+    });
+});
+
+
+</script>
